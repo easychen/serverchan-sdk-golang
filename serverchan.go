@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
+	"strings"
 )
 
 type ScSendOptions struct {
@@ -23,8 +25,17 @@ type ScSendResponse struct {
 
 func ScSend(sendkey, title, desp string, options *ScSendOptions) (*ScSendResponse, error) {
 	var url string
-	if len(sendkey) >= 4 && sendkey[:4] == "sctp" {
-		url = fmt.Sprintf("https://%s.push.ft07.com/send", sendkey)
+	// 判断 sendkey 是否以 "sctp" 开头
+	if strings.HasPrefix(sendkey, "sctp") {
+		// 使用正则表达式提取 sendkey 中的数字
+		re := regexp.MustCompile(`^sctp(\d+)t`)
+		matches := re.FindStringSubmatch(sendkey)
+
+		if len(matches) > 1 {
+			url = fmt.Sprintf("https://%s.push.ft07.com/send/%s.send", matches[1], sendkey)
+		} else {
+			return nil, fmt.Errorf("invalid sendkey format")
+		}
 	} else {
 		url = fmt.Sprintf("https://sctapi.ftqq.com/%s.send", sendkey)
 	}

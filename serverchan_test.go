@@ -8,7 +8,7 @@ import (
 // TestScSendRealRequest 发送真实请求到 ServerChan API
 func TestScSendRealRequest(t *testing.T) {
 	// 请在这里填写你自己的 sendkey
-	sendkey := "key" // 需要替换为真实的 sendkey
+	sendkey := "" // 需要替换为真实的 sendkey
 	title := "测试消息"
 	desp := "这是一条来自 Go 的测试消息。"
 
